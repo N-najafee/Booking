@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('photo');
             $table->string('short_description');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->integer('total_view')->default(0);
             $table->boolean('status')->default(0);
             $table->timestamps();

@@ -27,12 +27,10 @@
                     <h5>سایر تصاویر </h5>
                 </div>
                 @foreach($room->roomPhotos as $photo)
-                    <div class="col-3 mt-3">
-                        <div class="card">
-                            <img class=" image15"
-                                 src="{{url(env('ROOM_OTHER_PHOTO_PATH').$photo['photo'])}}">
-                            <div class="card-body  text-center mt-3">
-                            </div>
+                    <div class="card-group  col-3 mt-3">
+                        <div class="card p-3 mb-4">
+                            <img src="{{url(env('ROOM_OTHER_PHOTO_PATH').$photo['photo'])}}" alt="image"
+                                 class=" image15">
                         </div>
                     </div>
                 @endforeach

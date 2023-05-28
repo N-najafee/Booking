@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Http\constants\Constants;
-use App\Models\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -33,6 +32,7 @@ class PostFactory extends Factory
             'short_description' => $this->faker->text(150),
             'description' => $this->faker->text(4000),
             'status' => Constants::POST_ACTIVE,
+            'created_at' => $this->faker->dateTimeBetween(now()->subDays(6), now()),
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\paymentGeteway;
+namespace App\paymentGetWay;
 
 use App\Events\ReservationCheckEvent;
 use App\Http\constants\Constants;
@@ -47,7 +47,7 @@ class CreatePayment
                 event(new ReservationCheckEvent($reserves));
             } catch (\Exception $e) {
                 DB::rollBack();
-                return ['error' => $e->getMessage() . "77777777778"];
+                return ['error' => $e->getMessage()];
             }
 
             $order = Order::with('orderDetails')->where('transaction_no', $authority)->first();
@@ -79,7 +79,7 @@ class CreatePayment
                     $checkIn = Carbon::parse($checkIn)->addDay()->format('Y/m/d');
                 }
             }
-            DB::table('booked_rooms')->insert($bookedRooms);
+            $order->bookedRooms()->createMany($bookedRooms);
             DB::commit();
             return ['success' => "رزرو و پرداخت با موفقیت انجام شد"];
         } catch (\Exception $e) {

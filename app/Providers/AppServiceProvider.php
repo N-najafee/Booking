@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\paymentGetWay\GetWayInterface;
+use App\paymentGetWay\Zarinpal;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::usebootstrap();
+        app()->singleton(GetWayInterface::class,Zarinpal::class);
     }
 }

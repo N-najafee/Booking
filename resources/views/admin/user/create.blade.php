@@ -43,7 +43,7 @@
                         <label for="status">وضعیت</label>
                         <select class="form-control" name="status" id="status">
                             <option value="1" selected>فعال</option>
-                            <option value="2">غیرفعال</option>
+                            <option value="0">غیرفعال</option>
                         </select>
                     </div>
                     <div class="form-group col-md-3 mt-4">

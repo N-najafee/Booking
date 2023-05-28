@@ -168,6 +168,7 @@ return [
          "children"            =>"کودک",
          "room_id"            =>"اتاق",
          "comment"            =>"متن دیدگاه",
+        'images'              => "عکس"
 
     ],
 

@@ -6,6 +6,7 @@ use App\Models\Amenity;
 use App\Models\Comment;
 use App\Models\Room;
 use App\Models\RoomPhoto;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class InsertDataSeeder extends Seeder
@@ -21,7 +22,7 @@ class InsertDataSeeder extends Seeder
         Room::factory()->count(6)->create()->each(function ($room) use ($amenities) {
             $room->amenities()->attach($amenities->random(4));
             RoomPhoto::factory()->count(2)->create(['room_id' => $room->id]);
-            Comment::factory()->count(4)->create(['room_id' => $room->id]);
+            Comment::factory()->count(4)->create(['room_id' => $room->id,'user_id'=>random_int(1,12)]);
         });
 
     }

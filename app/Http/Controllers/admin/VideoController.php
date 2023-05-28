@@ -5,10 +5,11 @@ namespace App\Http\Controllers\admin;
 use App\Http\constants\CacheConstant;
 use App\Http\constants\Constants;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\VideoStoreRequest;
+use App\Http\Requests\VideoUpdateRequest;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Session;
 
 class VideoController extends Controller
 {
@@ -43,17 +44,10 @@ class VideoController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(VideoStoreRequest $request)
     {
-        $request->validate([
-            'video_code' => 'required|max:50',
-            'description' => 'nullable|string|max:100',
-        ]);
-        Video::create([
-            'video_code' => $request->video_code,
-            'description' => $request->description,
-            'status' => $request->status,
-        ]);
+        $data=$request->validated();
+        Video::create($data);
         // remove cache
         forGetCache('adminShowVideo_');
         forGetCache('galleryList_');
@@ -93,17 +87,10 @@ class VideoController extends Controller
      * @param Video $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Video $video)
+    public function update(VideoUpdateRequest $request, Video $video)
     {
-        $request->validate([
-            'video_code' => 'required|max:50',
-            'description' => 'nullable|string|max:100',
-        ]);
-        $video->update([
-            'video_code' => $request->video_code,
-            'description' => $request->description,
-            'status' => $request->status,
-        ]);
+        $data=$request->validated();
+        $video->update($data);
         // remove cache
         forGetCache('adminShowVideo_');
         forGetCache('galleryList_');

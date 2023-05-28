@@ -23,7 +23,7 @@ class CommentFactory extends Factory
             'room_id'=>Room::factory(),
             'user_id'=>User::factory(),
             'comment'=>$this->faker->text(200),
-            'status'=>Constants::COMMENT_UNVERIFIED,
+            'status'=>Constants::COMMENT_VERIFIED,
         ];
     }
 }

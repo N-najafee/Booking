@@ -31,7 +31,6 @@
                         <td class="text-center">  {{$room->name}} </td>
                         <td class="text-center ">  {{number_format( $room->price)}} </td>
                         <td class="text-center">
-
                             <a href="{{url((env('ROOM_MAIN_PHOTO_PATH').$room->main_photo))}}" alt="image"
                                target="_blank">
                                 <img src="{{url(env('ROOM_MAIN_PHOTO_PATH').$room->main_photo)}}" alt="image"

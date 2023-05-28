@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\RoomPhotoStoreRequest;
 use App\Models\Room;
 use App\Models\RoomPhoto;
 use Illuminate\Http\Request;
@@ -35,21 +37,16 @@ class RoomPhotoController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoomPhotoStoreRequest $request)
     {
-        $request->validate([
-            'room_id' => 'required|exists:rooms,id',
-            'images' => 'required',
-            'images.*' => 'mimes:jpg,jpeg,png,svg'
-        ]);
         $room = Room::find($request->room_id);
+        $imageNames = [];
         foreach ($request->images as $image) {
             $photoName = CreateFileName($image->getclientOriginalname());
             $image->move(public_path(env('ROOM_OTHER_PHOTO_PATH')), $photoName);
-            $room->roomPhotos()->create([
-                'photo' => $photoName
-            ]);
+            $imageNames[] = ['photo' => $photoName];
         }
+        $room->roomPhotos()->createMany($imageNames);
         return redirect()->back()->with('message', [
             'type' => "success",
             'body' => ('تصاویر با موفقیت ایجاد گردید')
@@ -89,7 +86,7 @@ class RoomPhotoController extends Controller
      */
     public function update(Request $request, Room $room)
     {
-        $roomPhoto = RoomPhoto::find($request->image_id);
+        $roomPhoto = RoomPhoto::find($request->roomPhotoId);
         $result = File::move(public_path(env('ROOM_OTHER_PHOTO_PATH') . $roomPhoto->photo),
             public_path(env('ROOM_MAIN_PHOTO_PATH') . $roomPhoto->photo));
         if ($result) {
@@ -98,7 +95,10 @@ class RoomPhotoController extends Controller
                 'main_photo' => $roomPhoto->photo
             ]);
             $roomPhoto->delete();
-
+            // remove cache
+            forGetCache('showRooms_');
+            forGetCache('roomList_');
+            forGetCache('adminShowRooms_');
             return redirect()->back()->with('message', [
                 'type' => "success",
                 'body' => (' تصویر اصلی با موفقیت ویرایش گردید')
@@ -123,6 +123,10 @@ class RoomPhotoController extends Controller
             unlink(public_path(env('ROOM_OTHER_PHOTO_PATH') . $roomPhoto->photo));
         }
         $roomPhoto->delete();
+        // remove cache
+        forGetCache('showRooms_');
+        forGetCache('roomList_');
+        forGetCache('adminShowRooms_');
         return redirect()->back()->with('message', [
             'type' => "success",
             'body' => ('تصویر با موفقیت حذف گردید')

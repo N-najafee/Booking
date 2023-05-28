@@ -5,6 +5,8 @@ namespace App\Http\Controllers\admin;
 use App\Http\constants\CacheConstant;
 use App\Http\constants\Constants;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostStoreRequest;
+use App\Http\Requests\PostUpdateRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -42,23 +44,12 @@ class PostController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostStoreRequest $request)
     {
-        $request->validate([
-            'title' => 'required|unique:features,title|string|max:4000',
-            'photo' => "required|mimes:jpg,jpeg,png,svg",
-            'short_description' => 'required|string|max:200',
-            'description' => 'nullable|string|max:4000',
-        ]);
         $imageName = CreateFileName($request->photo->getclientoriginalname());
         $request->photo->move(public_path(env('IMAGE_POST_PATH')), $imageName);
-        Post::create([
-            'title' => $request->title,
-            'photo' => $imageName,
-            'short_description' => $request->short_description,
-            'status' => $request->status,
-            'description' => $request->description,
-        ]);
+        $data=array_merge($request->validated(),['photo'=>$imageName]);
+        Post::create($data);
         // remove cache
         forGetCache('showPosts_');
         forGetCache('blogList_');
@@ -98,26 +89,16 @@ class PostController extends Controller
      * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostUpdateRequest $request, Post $post)
     {
-        $request->validate([
-            'title' => 'required|unique:features,title|string|max:4000',
-            'photo' => "mimes:jpg,jpeg,png,svg",
-            'short_description' => 'required|string|max:200',
-            'description' => 'nullable|string|max:4000',
-        ]);
         if ($request->has('photo')) {
             $imageName = CreateFileName($request->photo->getclientoriginalname());
             unlink(public_path(env('IMAGE_POST_PATH') . $post->photo));
             $request->photo->move(public_path(env('IMAGE_POST_PATH')), $imageName);
         }
-        $post->update([
-            'title' => $request->title,
-            'photo' => $imageName ?? $post->photo,
-            'short_description' => $request->short_description,
-            'status' => $request->status,
-            'description' => $request->description,
-        ]);
+        $data=array_merge($request->validated(),['photo'=>$imageName ?? $post->photo]);
+
+        $post->update($data);
         // remove cache
         forGetCache('showPosts_');
         forGetCache('blogList_');

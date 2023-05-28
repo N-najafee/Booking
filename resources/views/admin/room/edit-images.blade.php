@@ -27,16 +27,15 @@
                     <h5>سایر تصاویر </h5>
                 </div>
                 @foreach($room->roomPhotos as $photo)
-                    <div class="col-3 mt-3">
-                        <div class="card">
+                    <div class="card-group  col-3 mt-3">
+                        <div class="card p-3">
                             <img class=" image15"
                                  src="{{url(env('ROOM_OTHER_PHOTO_PATH').$photo['photo'])}}">
-                            <div class="card-body  text-center mt-3">
+                            <div class="card-body  text-center mb-2">
                                 <form action="{{route('admin.room-photo.destroy',['room'=>$photo['id']])}}"
                                       method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <input type="hidden" name="image_id" value="">
                                     <button type="submit" class="btn btn-outline-danger align-items-center "> حذف
                                     </button>
                                 </form>
@@ -44,7 +43,7 @@
                                 <form action="{{route('admin.room-photo.update',['room'=>$room['id']])}}" method="POST">
                                     @csrf
                                     @method('PUT')
-                                    <input type="hidden" name="image_id" value="{{$photo->id}}">
+                                    <input type="hidden" name="roomPhotoId" value="{{$photo->id}}">
                                     <button type="submit" class="btn btn-outline-info mt-2 ">انتخاب بعنوان تصویر اصلی
                                     </button>
                                 </form>
@@ -58,13 +57,6 @@
             <form action="{{route('admin.room-photo.store')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
-                    {{--                    <div class="form-group col-4">--}}
-                    {{--                        <label for="primary_image">  تصویر اصلی</label>--}}
-                    {{--                        <div class="custom-file">--}}
-                    {{--                            <input type="file" class="form-control custom-file-input" name="primary_image" id="primary_image">--}}
-                    {{--                            <label class="custom-file-label"></label>--}}
-                    {{--                        </div>--}}
-                    {{--                    </div>--}}
                     <input type="hidden" name="room_id" value="{{$room['id']}}">
                     <div class="form-group col-4">
                         <label for="images">انتخاب تصاویر</label>

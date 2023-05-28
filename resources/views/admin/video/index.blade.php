@@ -7,7 +7,7 @@
     <div class="row">
         <div class=" col-md-12 mb-4 p-md-5 bg-white">
             <div class="mb-4 d-flex justify-content-between">
-                <h5 class="font-weight-bold"> لیست پست ها </h5>
+                <h5 class="font-weight-bold"> لیست ویدیو ها </h5>
                 <a href="{{route('admin.video.create')}}" class="btn btn-outline-primary">
                     ایجاد ویدیو
                     <i class="fa fa-plus"></i>
@@ -29,10 +29,16 @@
                         <td class="text-center">  {{$videos->firstitem() + $key}} </td>
                         <td class="text-center">  {{$video->description}} </td>
                         <td class="text-center ">
-                            <style>.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}</style>
+                            <style>
+                                .h_iframe-aparat_embed_frame{position:relative;}
+                                .h_iframe-aparat_embed_frame
+                                .ratio{display:block;width:100%;height:auto;}
+                                .h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}
+                            </style>
                             <div class="h_iframe-aparat_embed_frame">
                                 <span style="display: block;padding-top: 57%"></span>
-                                <iframe src="https://www.aparat.com/video/video/embed/videohash/{{$video->video_code}}/vt/frame"  allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
+                                <iframe src="https://www.aparat.com/video/video/embed/videohash/{{$video->video_code}}/vt/frame"
+                                        allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
                             </div>
                         </td>
                         <td class="{{$video->getraworiginal('status')===1 ? "text-success" : "text-danger"}}">  {{$video->status}} </td>

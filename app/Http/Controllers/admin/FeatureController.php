@@ -5,6 +5,8 @@ namespace App\Http\Controllers\admin;
 use App\Http\constants\CacheConstant;
 use App\Http\constants\Constants;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FeatureStoreRequest;
+use App\Http\Requests\FeatureUpdateRequest;
 use App\Models\Feature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -41,18 +43,10 @@ class FeatureController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FeatureStoreRequest $request)
     {
-        $request->validate([
-            'icon' => 'required|string|max:50',
-            'title' => 'required|unique:features,title|string|max:100',
-            'description' => 'nullable|string|max:255',
-        ]);
-        Feature::create([
-            'icon' => $request->icon,
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
+        $data=$request->validated();
+        Feature::create($data);
         // remove cache
         forGetCache('showFeatures_');
         forGetCache('adminShowFeatures_');
@@ -92,13 +86,9 @@ class FeatureController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Feature $feature)
+    public function update(FeatureUpdateRequest $request, Feature $feature)
     {
-        $data = $request->validate([
-            'icon' => 'required|string|max:50',
-            'title' => 'required|string|max:100|unique:features,title,' . $feature->id,
-            'description' => 'nullable|string|max:255',
-        ]);
+        $data=$request->validated();
         $feature->update($data);
         // remove cache
         forGetCache('showFeatures_');

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Events\ReservationCheckEvent;
-use App\paymentGeteway\Zarinpal;
+use App\paymentGetWay\GetWayInterface;
+use App\paymentGetWay\Zarinpal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,9 +16,8 @@ class PaymentController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function payment_store(Request $request)
+    public function payment_store(Request $request,GetWayInterface $zarinPalGateway)
     {
-
         $validator = validator::make($request->all(), [
             'payment-type' => 'required',
             'user' => 'required',
@@ -40,7 +40,6 @@ class PaymentController extends Controller
                 'body' => $checkList['error']
             ]);
         }
-        $zarinPalGateway = new Zarinpal();
         $result = $zarinPalGateway->send($totalAmount, "تست", $user);
         if (array_key_exists('error', $result)) {
             return redirect()->route('hotel')->with('message', [
@@ -57,9 +56,8 @@ class PaymentController extends Controller
      * @param int
      * @return \Illuminate\Http\Response
      */
-    public function payment_verify(Request $request, $totalAmount)
+    public function payment_verify(Request $request, $totalAmount,GetWayInterface $zarinPalGateway)
     {
-        $zarinPalGateway = new Zarinpal();
         $result = $zarinPalGateway->verify($request->Authority, $totalAmount);
         if (array_key_exists('error', $result)) {
             return redirect()->route('hotel')->with('message', [

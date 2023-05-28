@@ -32,6 +32,7 @@ function forGetCache($cacheKey)
         if (Cache::has($cacheKey . $item)) {
             Cache::forget($cacheKey . $item);
             $result = true;
+            break ;
         }
     }
     return $result;

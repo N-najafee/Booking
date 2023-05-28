@@ -5,11 +5,12 @@ namespace App\Http\Controllers\admin;
 use App\Http\constants\CacheConstant;
 use App\Http\constants\Constants;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -20,8 +21,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $page=$request->page?? 0;
-        $users = Cache::remember('adminShowUsers_'.$page,CacheConstant::ONE_DAY,function (){
+        $page = $request->page ?? 0;
+        $users = Cache::remember('adminShowUsers_' . $page, CacheConstant::ONE_DAY, function () {
             return User::latest()->paginate(Constants::PAGINATION_DEFAULT);
         });
         return view('admin.user.index', compact('users'));
@@ -43,17 +44,8 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-
-        $request->validate([
-            'name' => 'sometimes|required|string|max:100|unique:users',
-            'email' => 'required|email|regex:/(.+)@(.+)\.(.+)/i|max:255|unique:users',
-            'password' => "sometimes|required|min:8|string",
-            'address' => "nullable|string|max:2000",
-            'phone' => 'required|string|regex:/^09([0-9])[0-9]{8}/'
-        ]);
-
         User::create([
             'name' => $request->name ?? $request->email,
             'email' => $request->email,
@@ -101,17 +93,8 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        $request->validate([
-            'name' => 'required|string|max:100|unique:users,name,' . $user->id,
-            'email' => 'required|email|regex:/(.+)@(.+)\.(.+)/i|max:255|unique:users,email,' . $user->id,
-            'password' => "required|min:8|string",
-            'address' => "nullable|string|max:2000",
-            'phone' => 'required|string|regex:/^09([0-9])[0-9]{8}/'
-        ]);
-
-
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -138,6 +121,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+        $user->comments()->delete();
         // remove cache
         forGetCache('adminShowUsers_');
         return redirect()->route('admin.user.index')->with('message', [

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\paymentGeteway;
+namespace App\paymentGetWay;
 
 use App\Http\constants\Constants;
 use App\Mail\PaymentMail;
 use Illuminate\Support\Facades\Mail;
 
-class Zarinpal extends CreatePayment
+class Zarinpal extends CreatePayment implements GetWayInterface
 {
     public function send($totalAmount, $description, $user)
     {
@@ -81,7 +81,7 @@ class Zarinpal extends CreatePayment
                 }
                 try {
                     Mail::send(new PaymentMail($user, $reserves, $totalAmount, $authority));
-                    return ['success' => $updateOrder['success'] . " :" . $result['RefID']];
+                    return ['success' => $updateOrder['success'] . " : " . $result['RefID']];
                 } catch (\Exception $e) {
                     return ['error' => $e->getMessage() . "رزرو و پرداخت با موفقیت انجام شد و خطا در ارسال ایمیل می باشد"];
                 }

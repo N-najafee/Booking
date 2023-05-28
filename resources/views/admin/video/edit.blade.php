@@ -28,7 +28,7 @@
                         <label for="status">وضعیت</label>
                         <select class="form-control" name="status" id="status">
                             <option value="1" {{$video->getraworiginal('status') ?  "selected" :""}}>فعال</option>
-                            <option value="2" {{$video->getraworiginal('status')?  "" :"selected"}}>غیرفعال</option>
+                            <option value="0" {{$video->getraworiginal('status')?  "" :"selected"}}>غیرفعال</option>
                         </select>
                     </div>
                 </div>

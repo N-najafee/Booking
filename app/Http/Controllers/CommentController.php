@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\constants\CacheConstant;
 use App\Http\constants\Constants;
 use App\Models\Comment;
 use App\Models\User;
@@ -17,7 +18,10 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::with('user', 'room')->latest()->paginate(Constants::PAGINATION_DEFAULT);
+        $page = \request()->page ?? 0;
+        $comments = cache()->remember('adminComment_'.$page,CacheConstant::ONE_DAY,function () {
+           return Comment::with('user', 'room')->latest()->paginate(Constants::PAGINATION_DEFAULT);
+        });
         return view('admin.comment.index', compact('comments'));
     }
 
@@ -41,7 +45,7 @@ class CommentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'comment' => 'required|min:5|max:4000',
-            'room_id' => ['required']
+            'room_id' => 'required'
         ]);
         if ($validator->fails()) {
             return redirect()->to(url()->previous() . '#comment')->withErrors($validator);
@@ -54,6 +58,7 @@ class CommentController extends Controller
                 'room_id' => $request->room_id,
                 'comment' => $request->comment,
             ]);
+            forGetCache('adminComment_');
             return redirect()->to(url()->previous() . '#comment')->with('message', [
                 'type' => 'success',
                 'body' => "دیدگاه شما با موفقیت ثبت گردید و پس از تایید نمایش داده خواهد شد"
@@ -61,7 +66,7 @@ class CommentController extends Controller
         } else {
             return redirect()->to(url()->previous() . '#comment')->with('message', [
                 'type' => 'danger',
-                'body' => "کاربر گرامی در صورتی میتوانید دیدگاه را ثبت نمایید که رزرو داشته باشید"
+                'body' => "کاربر گرامی این اتاق در لیست رزرو شما نبوده و نمی توانید دیدگاهی بابت آن ثبت نمایید"
             ]);
 
         }
@@ -103,6 +108,7 @@ class CommentController extends Controller
             $comment->update(['status' => Constants::COMMENT_VERIFIED]);
 
         $status = $comment->getraworiginal('status') ? "تایید" : "لغو تایید";
+        forGetCache('adminComment_');
         return redirect()->back()->with('message', [
             'type' => 'success',
             'body' => " دیدگاه با موفقیت $status شد. "
@@ -119,6 +125,7 @@ class CommentController extends Controller
     public function destroy(Comment $comment)
     {
         $comment->delete();
+        forGetCache('adminComment_');
         return redirect()->back()->with('message', [
             'type' => 'success',
             'body' => 'دیدگاه با موفقیت حذف گردید.'

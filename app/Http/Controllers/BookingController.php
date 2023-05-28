@@ -67,16 +67,7 @@ class BookingController extends Controller
         $checkOut = $data['check_out'];
         $dates = getDates($checkIn, $checkOut);
         $bookedDates = BookedRoom::where('room_id', $data['room_id'])->whereIn('booked_date', $dates)->pluck('booked_date')->toArray();
-        // check with dates in room_books table
-        foreach ($bookedDates as $date) {
-            $bookedDateCount = array_count_values($bookedDates)[$date];
-            if ($bookedDateCount >= $totalRoom) {
-                return redirect()->to(url()->previous() . '#reserved')->with('message', [
-                    'type' => "danger",
-                    'body' => " اتاق انتخاب شده در تاریخ $date  رزرو می باشد ",
-                ]);
-            }
-        }
+
         // check dates with dates in room_books table & reserve list
         if (session('booking_' . $userId)) {
             $reservedOrders = collect(session('booking_' . $userId));
@@ -91,6 +82,17 @@ class BookingController extends Controller
                             'body' => " اتاق انتخاب شده در تاریخ $date  رزرو می باشد ",
                         ]);
                     }
+                }
+            }
+        } else {
+            // check date with dates in room_books table
+            foreach ($bookedDates as $date) {
+                $bookedDateCount = array_count_values($bookedDates)[$date];
+                if ($bookedDateCount >= $totalRoom) {
+                    return redirect()->to(url()->previous() . '#reserved')->with('message', [
+                        'type' => "danger",
+                        'body' => " اتاق انتخاب شده در تاریخ $date  رزرو می باشد ",
+                    ]);
                 }
             }
         }

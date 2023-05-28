@@ -18,10 +18,10 @@ class Order extends Model
         return $this->hasMany(OrderDetail::class);
     }
 
-    public function status():Attribute
+    public function status(): Attribute
     {
-        return Attribute::get(function ($value){
-            return $value === Constants::ORDER_SUCCESSFUL  ? "موفق" : "ناموفق";
+        return Attribute::get(function ($value) {
+            return $value === Constants::ORDER_SUCCESSFUL ? "موفق" : "ناموفق";
         });
     }
 
@@ -30,5 +30,8 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-
+    public function bookedRooms()
+    {
+        return $this->hasMany(BookedRoom::class);
+    }
 }

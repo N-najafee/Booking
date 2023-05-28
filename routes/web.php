@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\FeatureController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\PostController;
 use App\Http\Controllers\admin\RoomController;
+use App\Http\Controllers\admin\RoomPhotoController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\VideoController;
 use App\Http\Controllers\Auth\LoginController;
@@ -13,8 +14,6 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RoomPhotoController;
-use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
 /*

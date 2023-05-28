@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-    <div class="jumbotron jumbotron-fluid bg-aliceblue mb-5">
+    <div class="container-fluid mb-5 bg-success  bg-opacity-50 p-3 align-items-center justify-content-center ">
         <div class="container text-center">
             <h1 class="display-4">اتاق ها </h1>
             <p class="lead">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
@@ -26,7 +26,7 @@
                                 <h5 class="card-title ">{{$room->name}} </h5>
                                 <p class="card-text">{{number_format($room->price)}} ﷼</p>
                             </div>
-                            <p class="card-text"><a href="{{route('room.detail',['id'=>$room->id])}}" class="btn text-dark bg-info col-12">نمایش جزییات</a></p>
+                            <p class="card-text"><a href="{{route('room.detail',['id'=>$room->id])}}" class="btn btn-outline-success text-dark bg-success bg-opacity-10 col-12">نمایش جزییات</a></p>
                         </div>
                     </div>
                 @endforeach

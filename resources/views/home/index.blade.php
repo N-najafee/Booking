@@ -1,6 +1,6 @@
 @extends('home.layout.home')
 @section("title")
-    <p>index</p>
+    index
 @endsection
 @section('content')
     <div class="col-12">
@@ -148,7 +148,6 @@
         <div class="container-fluid text-center p-3 mt-4">
             <h1>آخرین پست ها </h1>
             <div class="row row-cols-1 row-cols-md-3 m-4" id="postsList" >
-
                 @foreach($posts as $post)
                     <div class="card-group  col-3 mt-3">
                         <div class="card p-3 mb-4">
@@ -163,8 +162,9 @@
                         </div>
                     </div>
                 @endforeach
+
             </div>
-            <button class="btn btn-outline-success btn-lg text-dark mb-3" tabindex="-1" role="button" aria-disabled="true"
+            <button class="btn btn-outline-success btn-lg text-dark mb-3"
                     id="loadMore" data-page="{{ $posts->currentPage() }}">مشاهده بیشتر
             </button>
         </div>
@@ -177,7 +177,6 @@
         $('#loadMore').click(function () {
             let nextPage = $(this).data('page') + 1;
             $.get(`{{ url('/hotel/load-more') }}?page=${nextPage}`, function (response, status) {
-                console.log(status,response,"[")
                 if (status === 'success') {
                     if (response.length > 0) {
                         response.forEach(function (post) {
@@ -194,7 +193,6 @@
                             ادامه مطلب
 
                                         </a>
-
                                     </p>
                                 </div>
                             </div>

@@ -85,10 +85,10 @@
                         @error('size') <p class="invalid-feedback"> {{$message}}</p>@enderror
                     </div>
                     <div class="form-group col-3 mt-3">
-                        <label for="total_room">تعداد اتاق </label>
-                        <input class="form-control @error('total_room') {{'is-invalid'}} @enderror" id="total_room"
-                               name="total_room" type="number" min="1" value="{{$room->total_rooms}}">
-                        @error('total_room') <p class="invalid-feedback"> {{$message}}</p>@enderror
+                        <label for="total_rooms">تعداد اتاق </label>
+                        <input class="form-control @error('total_rooms') {{'is-invalid'}} @enderror" id="total_rooms"
+                               name="total_rooms" type="number" min="1" value="{{$room->total_rooms}}">
+                        @error('total_rooms') <p class="invalid-feedback"> {{$message}}</p>@enderror
                     </div>
                     <div class="form-group col-3 mt-3">
                         <label for="total_bathroom">تعداد سرویس بهداشتی </label>
@@ -98,30 +98,23 @@
                         @error('total_bathroom') <p class="invalid-feedback"> {{$message}}</p>@enderror
                     </div>
                     <div class="form-group col-3 mt-3">
-                        <label for="total_guest">تعداد مهمان </label>
-                        <input class="form-control @error('total_guest') {{'is-invalid'}} @enderror" id="total_guest"
-                               name="total_guest" type="number" min="1" value="{{$room->total_guests}}">
-                        @error('total_guest') <p class="invalid-feedback"> {{$message}}</p>@enderror
+                        <label for="total_guests">تعداد مهمان </label>
+                        <input class="form-control @error('total_guests') {{'is-invalid'}} @enderror" id="total_guests"
+                               name="total_guests" type="number" min="1" value="{{$room->total_guests}}">
+                        @error('total_guests') <p class="invalid-feedback"> {{$message}}</p>@enderror
                     </div>
                     <div class="form-group col-3 mt-3">
-                        <label for="total_bed">تعداد تخت </label>
-                        <input class="form-control @error('total_bed') {{'is-invalid'}} @enderror" id="total_bed"
-                               name="total_bed" type="number" min="1" value="{{$room->total_beds}}">
-                        @error('total_bed') <p class="invalid-feedback"> {{$message}}</p>@enderror
+                        <label for="total_beds">تعداد تخت </label>
+                        <input class="form-control @error('total_beds') {{'is-invalid'}} @enderror" id="total_beds"
+                               name="total_beds" type="number" min="1" value="{{$room->total_beds}}">
+                        @error('total_beds') <p class="invalid-feedback"> {{$message}}</p>@enderror
                     </div>
                     <div class="form-group col-3 mt-3">
-                        <label for="total_balcony">تعداد بالکن </label>
-                        <input class="form-control @error('total_balcony') {{'is-invalid'}} @enderror"
-                               id="total_balcony" name="total_balcony" type="number" min="1"
+                        <label for="total_balconies">تعداد بالکن </label>
+                        <input class="form-control @error('total_balconies') {{'is-invalid'}} @enderror"
+                               id="total_balconies" name="total_balconies" type="number" min="1"
                                value="{{$room->total_balconies}}">
-                        @error('total_balcony') <p class="invalid-feedback"> {{$message}}</p>@enderror
-                    </div>
-
-                    <div class="form-group col-3 mt-3">
-                        <label for="main_photo">انتخاب تصویر</label>
-                        <input class="form-control @error('main_photo') {{'is-invalid'}} @enderror" id="main_photo"
-                               name="main_photo" type="file">
-                        @error('main_photo') <p class="invalid-feedback"> {{$message}}</p>@enderror
+                        @error('total_balconies') <p class="invalid-feedback"> {{$message}}</p>@enderror
                     </div>
                 </div>
                 <div class="form-group  mt-3  fw-bolder">

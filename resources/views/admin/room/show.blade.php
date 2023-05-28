@@ -76,8 +76,8 @@
                         <input class="form-control " id="total_bed" name="total_bed" type="text" min="1" value="{{$room->total_beds}}" disabled>
                     </div>
                     <div class="form-group col-3 mt-3">
-                        <label for="total_balcony">تعداد بالکن </label>
-                        <input class="form-control" id="total_balcony" name="total_balcony" type="text" value="{{$room->total_balconies}}" disabled>
+                        <label for="total_balconies">تعداد بالکن </label>
+                        <input class="form-control" id="total_balconies" name="total_balconies" type="text" value="{{$room->total_balconies}}" disabled>
                     </div>
                 </div>
             <h4 class="mt-3">   امکانات : </h4>

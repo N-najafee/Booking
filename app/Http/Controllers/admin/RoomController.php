@@ -5,11 +5,12 @@ namespace App\Http\Controllers\admin;
 use App\Http\constants\CacheConstant;
 use App\Http\constants\Constants;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RoomRequest;
+use App\Http\Requests\RoomStoreRequest;
 use App\Http\Requests\RoomUpdateRequest;
 use App\Models\Amenity;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -43,35 +44,32 @@ class RoomController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param RoomStoreRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(RoomRequest $request)
+    public function store(RoomStoreRequest $request)
     {
         try {
             DB::beginTransaction();
             $photoName = CreateFileName($request->main_photo->getclientOriginalname());
             $request->main_photo->move(public_path(env('ROOM_MAIN_PHOTO_PATH')), $photoName);
-            $room = Room::create([
-                'name' => $request->name,
-                'price' => $request->price,
-                'description' => $request->description,
-                'size' => $request->size,
-                'total_rooms' => $request->total_room,
-                'total_bathroom' => $request->total_bathroom,
-                'total_balconies' => $request->total_balcony,
-                'total_guests' => $request->total_puest,
-                'total_beds' => $request->total_bed,
-                'main_photo' => $photoName,
-            ]);
+            $data = Arr::except(
+                array_merge($request->validated(), ['main_photo' => $photoName]),
+                ['images', 'amenity']
+            );
 
+            $room = Room::create(
+                $data
+            );
+
+            $imageNames = [];
             foreach ($request->images as $image) {
-                $photoName = CreateFileName($image->getclientOriginalname());
-                $image->move(public_path(env('ROOM_OTHER_PHOTO_PATH')), $photoName);
-                $room->roomPhotos()->create([
-                    'photo' => $photoName
-                ]);
+                $imageName = CreateFileName($image->getclientOriginalname());
+                $image->move(public_path(env('ROOM_OTHER_PHOTO_PATH')), $imageName);
+                $imageNames[] = ['photo' => $imageName];
             }
+
+            $room->roomPhotos()->createMany($imageNames);
             $room->amenities()->attach($request->amenity);
             // remove cache
             forGetCache('showRooms_');
@@ -85,6 +83,9 @@ class RoomController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             unlink(public_path(env('ROOM_MAIN_PHOTO_PATH') . $photoName));
+            foreach (Arr::flatten($imageNames) as $imageName) {
+                unlink(public_path(env('ROOM_OTHER_PHOTO_PATH') . $imageName));
+            }
             return redirect()->back()->with('message', [
                 'type' => "danger",
                 'body' => $e->getMessage()
@@ -119,8 +120,8 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Room $room
+     * @param RoomUpdateRequest $request
+     * @param Room $room
      * @return \Illuminate\Http\Response
      */
     public function update(RoomUpdateRequest $request, Room $room)
@@ -132,20 +133,15 @@ class RoomController extends Controller
                 unlink(public_path(env('ROOM_MAIN_PHOTO_PATH') . $room->main_photo));
                 $request->main_photo->move(public_path(env('ROOM_MAIN_PHOTO_PATH')), $photoName);
             }
+            $data = Arr::except(
+                array_merge($request->validated(), ['main_photo' => $photoName ?? $room->main_photo]),
+                ['images', 'amenity']
+            );
 
-            $room->update([
-                'name' => $request->name,
-                'price' => $request->price,
-                'description' => $request->description,
-                'size' => $request->size,
-                'total_rooms' => $request->total_room,
-                'total_bathroom' => $request->total_bathroom,
-                'total_balconies' => $request->total_balcony,
-                'total_guests' => $request->total_guest,
-                'total_beds' => $request->total_bed,
-                'video_code' => $request->video_code,
-                'main_photo' => $photoName ?? $room->main_photo,
-            ]);
+            $room->update(
+                $data
+            );
+
             $room->amenities()->sync($request->amenity);
             // remove cache
             forGetCache('showRooms_');
@@ -162,9 +158,7 @@ class RoomController extends Controller
                 'type' => "danger",
                 'body' => $e->getMessage()
             ]);
-
         }
-
     }
 
     /**

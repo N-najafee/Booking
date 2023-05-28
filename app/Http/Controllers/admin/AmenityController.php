@@ -19,7 +19,7 @@ class AmenityController extends Controller
     public function index(Request $request)
     {
         $page = $request->page ?? 0;
-        $amenities = Cache::remember('amenity_' . $page, CacheConstant::ONE_DAY, function () {
+        $amenities = Cache::remember('adminShowAmenity_' . $page, CacheConstant::ONE_DAY, function () {
             return Amenity::latest()->paginate(Constants::PAGINATION_DEFAULT);
         });
         return view('admin.amenity.index', compact('amenities'));
@@ -51,7 +51,7 @@ class AmenityController extends Controller
             'name' => $request->name,
         ]);
         // remove cache
-        forGetCache('amenity_');
+        forGetCache('adminShowAmenity_');
         return redirect()->route('admin.amenity.index')->with('message', [
             'type' => "success",
             'body' => ('امکانات رفاهی با موفقیت ایجاد گردید')
@@ -96,7 +96,7 @@ class AmenityController extends Controller
             'name' => $request->name,
         ]);
         // remove cache
-        forGetCache('amenity_');
+        forGetCache('adminShowAmenity_');
         return redirect()->route('admin.amenity.index')->with('message', [
             'type' => "success",
             'body' => ('امکانات رفاهی با موفقیت ویرایش گردید')
@@ -114,7 +114,7 @@ class AmenityController extends Controller
     {
         $amenity->delete();
         // remove cache
-        forGetCache('amenity_');
+        forGetCache('adminShowAmenity_');
         return redirect()->back()->with('message', [
             'type' => 'warning',
             'body' => "امکانات رفاهی انتخاب شده حذف گردید"

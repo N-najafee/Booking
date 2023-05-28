@@ -25,7 +25,7 @@
                     </div>
 
                     <div class="form-group col-md-3 mt-4">
-                        <label for="icon">وضعیت</label>
+                        <label for="icon">آیکون</label>
                         <input class="form-control" id="icon" name="icon" type="text" value="{{ $feature->icon}}">
                     </div>
                 </div>

@@ -6,10 +6,11 @@ use App\Http\constants\Constants;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $fillable=['comment','status','room_id'];
 
     public function status():Attribute

@@ -47,7 +47,7 @@
                         <label for="status">وضعیت</label>
                         <select class="form-control" name="status" id="status">
                             <option value="1" {{$user->getraworiginal('status') ?  "selected" :""}}>فعال</option>
-                            <option value="2" {{$user->getraworiginal('status')?  "" :"selected"}}>غیرفعال</option>
+                            <option value="0" {{$user->getraworiginal('status')?  "" :"selected"}}>غیرفعال</option>
                         </select>
                     </div>
                     <div class="form-group col-md-3 mt-4">

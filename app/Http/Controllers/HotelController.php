@@ -26,7 +26,7 @@ class HotelController extends Controller
         });
 
         $rooms = Cache::remember('showRooms_' . $page, CacheConstant::ONE_DAY, function () {
-            return Room::orderBy('created_at', "desc")->latest()->paginate(Constants::PAGINATION_CUSTOM);
+            return Room::latest()->paginate(Constants::PAGINATION_CUSTOM);
         });
         $allRoom = Room::orderBy('created_at', "desc")->get();
         return view('home.index', compact('features', 'posts', 'rooms', 'allRoom'));
@@ -83,9 +83,9 @@ class HotelController extends Controller
     public function load_more(Request $request)
     {
         $page = $request->page ?? 0;
-        $posts = Post::orderBy('created_at', 'desc')
+        $posts = Post::latest()
             ->offset(($page - 1) * Constants::PAGINATION_CUSTOM)
-            ->limit(Constants::PAGINATION_DEFAULT)
+            ->limit(Constants::PAGINATION_CUSTOM)
             ->get();
         if ($posts->isEmpty()) {
             return response()->json(['message' => 'No more posts'], 204);
